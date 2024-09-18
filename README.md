@@ -6,7 +6,7 @@ This project is a client-server chat application with anonymous messaging. The s
 ### Files Overview
 
 - **client.html**:  
-  The front-end interface for users to interact with the chat application (client-side connection).
+  The front-end interface for users to interact with the chat application, including the client-side connection setup.
   
 - **fitness_maintainability.py**:  
   A Python script to measure maintainability by analyzing code complexity. It uses cyclomatic complexity metrics to determine how easy it is to maintain the system.
