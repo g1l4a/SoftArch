@@ -4,7 +4,6 @@ from datetime import datetime
 import json
 from flask_cors import CORS
 
-
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 CORS(app)
@@ -29,6 +28,11 @@ def save_messages():
 @app.route('/messages/count', methods=['GET'])
 def message_count():
     return jsonify({"count": len(messages)})
+
+# REST API to get all messages (for history)
+@app.route('/messages', methods=['GET'])
+def get_messages():
+    return jsonify(messages)
 
 # WebSocket event handler for receiving and broadcasting messages
 @socketio.on('message')

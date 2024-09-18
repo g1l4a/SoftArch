@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anonymous Chat</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <h1>Anonymous Chat Room</h1>
@@ -14,22 +15,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.0/socket.io.js"></script>
     <script>
         const socket = io('http://localhost:5000', {
-    transports: ['websocket', 'polling']
-});
+            transports: ['websocket', 'polling']
+        });
         const chat = document.getElementById('chat');
         const messageInput = document.getElementById('messageInput');
         const sendBtn = document.getElementById('sendBtn');
 
-        socket.on('message', function(msg) {
+        // Function to display a message in the chat
+        function displayMessage(text, timestamp) {
             const messageElement = document.createElement('div');
-            messageElement.textContent = `${msg.timestamp}: ${msg.text}`;
+            messageElement.textContent = `${timestamp}: ${text}`;
             chat.appendChild(messageElement);
+        }
+
+        // Fetch message history when the client connects
+        fetch('http://localhost:5000/messages')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(message => {
+                    displayMessage(message.text, message.timestamp);
+                });
+            });
+
+        // Handle new messages from WebSocket
+        socket.on('message', function(msg) {
+            displayMessage(msg.text, msg.timestamp);
         });
 
+        // Send new message
         sendBtn.onclick = function() {
             const message = messageInput.value;
-            socket.send(message);
-            messageInput.value = '';
+            if (message.trim()) {
+                socket.send(message);
+                messageInput.value = ''; // Clear input after sending
+            }
         };
     </script>
 </body>
